@@ -130,7 +130,7 @@ EAAD0eC6ZBdpABAMwhNB1nv1nSBnkWyLgRYyGMntxTfcQsdxiVcLEfc3ygFdl4L5dG5pqL6r6OGTjLYZ
 function handleMessage(sender_psid, received_message) {
 
  let response;
- fields=callUserProfileAPI(sender_psid);
+ //fields=callUserProfileAPI(sender_psid);
   // Checks if the message contains text
   if (received_message.text) {    
     // Create the payload for a basic text message, which
