@@ -1,7 +1,7 @@
 const request = require('request');
 'use strict';
 let fields = ['id', 'first_name', 'last_name', 'gender', 'locale', 'timezone'];
-static callUserProfileAPI(senderPsid) {
+function callUserProfileAPI(senderPsid) {
     return new Promise(function(resolve, reject) {
       let body = [];
 
