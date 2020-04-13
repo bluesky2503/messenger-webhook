@@ -1,5 +1,42 @@
 const request = require('request');
 'use strict';
+let fields = ['id', 'first_name', 'last_name', 'gender', 'locale', 'timezone'];
+static callUserProfileAPI(senderPsid) {
+    return new Promise(function(resolve, reject) {
+      let body = [];
+
+      // Send the HTTP request to the Graph API
+      request({
+        uri: `https://graph.facebook.com/v3.2/${senderPsid}`,
+        qs: {
+          access_token: config.pageAccesToken,
+          fields: "first_name, last_name, gender, locale, timezone"
+        },
+        method: "GET"
+      })
+        .on("response", function(response) {
+          // console.log(response.statusCode);
+
+          if (response.statusCode !== 200) {
+            reject(Error(response.statusCode));
+          }
+        })
+        .on("data", function(chunk) {
+          body.push(chunk);
+        })
+        .on("error", function(error) {
+          console.error("Unable to fetch profile:" + error);
+          reject(Error("Network Error"));
+        })
+        .on("end", () => {
+          body = Buffer.concat(body).toString();
+          // console.log(JSON.parse(body));
+
+          resolve(JSON.parse(body));
+        });
+    });
+  }
+
 //Deployed success in git
 // Imports dependencies and set up http server
 const
@@ -35,9 +72,6 @@ app.post('/webhook', (req, res) => {
 
       // Get the sender PSID
       let sender_psid = webhook_event.sender.id;
-
-      console.log('Sender PSID: ' + sender_psid);
-
 
       // aaaCheck if the event is a message or postback and
       // pass the event to the appropriate handler function
@@ -96,12 +130,14 @@ EAAD0eC6ZBdpABAMwhNB1nv1nSBnkWyLgRYyGMntxTfcQsdxiVcLEfc3ygFdl4L5dG5pqL6r6OGTjLYZ
 function handleMessage(sender_psid, received_message) {
 
  let response;
+ fields=callUserProfileAPI(sender_psid);
   // Checks if the message contains text
   if (received_message.text) {    
     // Create the payload for a basic text message, which
     // will be added to the body of our request to the Send API
     response = {
-      "text": `You sent the message: "${received_message.text}". Now send me an attachment!`
+      "text": `You "${fields.first_name}"  sent the message: "${received_message.text}". Now send me an attachment!`
+
     }
   } else if (received_message.attachments) {
     // Get the URL of the message attachment
@@ -180,5 +216,5 @@ function handlePostback(sender_psid, received_postback) {
   }
   // Send the message to acknowledge the postback
   callSendAPI(sender_psid, response);
-}
 
+}
