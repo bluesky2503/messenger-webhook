@@ -1,6 +1,6 @@
 const request = require('request');
 'use strict';
-let fields = ['id', 'first_name', 'last_name', 'gender', 'locale', 'timezone'];
+/*let fields = ['id', 'first_name', 'last_name', 'gender', 'locale', 'timezone'];
 function callUserProfileAPI(senderPsid) {
     return new Promise(function(resolve, reject) {
       let body = [];
@@ -35,7 +35,7 @@ function callUserProfileAPI(senderPsid) {
           resolve(JSON.parse(body));
         });
     });
-  }
+  }*/
 
 //Deployed success in git
 // Imports dependencies and set up http server
@@ -136,7 +136,7 @@ function handleMessage(sender_psid, received_message) {
     // Create the payload for a basic text message, which
     // will be added to the body of our request to the Send API
     response = {
-      "text": `You "${fields.first_name}"  sent the message: "${received_message.text}". Now send me an attachment!`
+      "text": `You "${sender_psid}"  sent the message: "${received_message.text}". Now send me an attachment!`
 
     }
   } else if (received_message.attachments) {
