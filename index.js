@@ -83,7 +83,8 @@ app.get('/webhook', (req, res) => {
   let mode = req.query['hub.mode'];
   let token = req.query['hub.verify_token'];
   let challenge = req.query['hub.challenge'];
-    
+  
+  res.send("Server heroku chạy ngon lành.");
   // Checks if a token and mode is in the query string of the request
   if (mode && token) {
   
