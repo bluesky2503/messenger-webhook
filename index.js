@@ -54,6 +54,10 @@ app.post('/webhook', (req, res) => {
   }
 });
 
+app.get('/', (req, res) => {
+  res.send("Server Heroku chạy ngon lành.");
+  
+}
 
 // Adds support for GET requests to our webhook
 app.get('/webhook', (req, res) => {
