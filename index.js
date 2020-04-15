@@ -1,7 +1,6 @@
 const request = require('request');
 'use strict';
 
-//Deployed success in git
 // Imports dependencies and set up http server
 const
   express = require('express'),
@@ -11,6 +10,7 @@ const PAGE_ACCESS_TOKEN = "EAAD0eC6ZBdpABAMwhNB1nv1nSBnkWyLgRYyGMntxTfcQsdxiVcLE
 
 // Sets server port and logs message on success
 app.listen(process.env.PORT || 1337, () => console.log('webhook is listening'));
+
 
 // Creates the endpoint for our webhook 
 app.post('/webhook', (req, res) => {  
@@ -22,6 +22,15 @@ app.post('/webhook', (req, res) => {
 
     // Iterates over each entry - there may be multiple if batched
     body.entry.forEach(function(entry) {
+
+      /*/ Gets the body of the webhook event
+      let webhook_event = entry.messaging[0];
+      console.log(webhook_event);
+
+      // Get the sender PSID
+      let sender_psid = webhook_event.sender.id;
+      console.log('Sender PSID: ' + sender_psid);
+
 
       // Gets the message. entry.messaging is an array, but 
       // will only ever contain one message, so we get index 0
@@ -35,6 +44,8 @@ app.post('/webhook', (req, res) => {
 
       // Get the sender PSID
       let sender_psid = webhook_event.sender.id;
+      
+      console.log('Sender PSID: ' + sender_psid);
 
       // Check if the event is a message or postback and
       // pass the event to the appropriate handler function
@@ -52,12 +63,9 @@ app.post('/webhook', (req, res) => {
     // Returns a '404 Not Found' if event is not from a page subscription
     res.sendStatus(404);
   }
+
 });
 
-app.get('/', (req, res) => {
-  res.send("Server Heroku chạy ngon lành.");
-  
-});
 
 // Adds support for GET requests to our webhook
 app.get('/webhook', (req, res) => {
@@ -87,6 +95,7 @@ app.get('/webhook', (req, res) => {
   }
 });
 
+
 /*Mã trang facebook
 EAAD0eC6ZBdpABAMwhNB1nv1nSBnkWyLgRYyGMntxTfcQsdxiVcLEfc3ygFdl4L5dG5pqL6r6OGTjLYZCoxZB8tmMFMGUmJZCtz69KWLvwlhJJndcmmrpj66ev816DZBRtkH3OZAiflqfYm62e6ufRXxNzt3HQXgGRawJUm0vyFLQZDZD
 */
@@ -94,18 +103,16 @@ EAAD0eC6ZBdpABAMwhNB1nv1nSBnkWyLgRYyGMntxTfcQsdxiVcLEfc3ygFdl4L5dG5pqL6r6OGTjLYZ
 // Handles messages events
 function handleMessage(sender_psid, received_message) {
 
+
  let response;
- //fields=callUserProfileAPI(sender_psid);
+  
   // Checks if the message contains text
   if (received_message.text) {    
     // Create the payload for a basic text message, which
     // will be added to the body of our request to the Send API
-    let user=callUserProfileAPI(sender_psid);
-
     response = {
-          "text": `You "toandang"  sent the message: "${received_message.text}". Now send me an attachment!`
+      "text": `You sent the message: "${received_message.text}". Now send me an attachment!`
     }
-
   } else if (received_message.attachments) {
     // Get the URL of the message attachment
     let attachment_url = received_message.attachments[0].payload.url;
@@ -147,8 +154,7 @@ function callSendAPI(sender_psid, response) {
   // Construct the message body
   let request_body = {
     "recipient": {
-      "id": sender_psid 
-      
+      "id": sender_psid
     },
     "message": response
   }
@@ -183,6 +189,5 @@ function handlePostback(sender_psid, received_postback) {
   }
   // Send the message to acknowledge the postback
   callSendAPI(sender_psid, response);
-
- 
 }
+
