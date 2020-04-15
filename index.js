@@ -1,41 +1,5 @@
 const request = require('request');
 'use strict';
-/*let fields = ['id', 'first_name', 'last_name', 'gender', 'locale', 'timezone'];
-function callUserProfileAPI(senderPsid) {
-    return new Promise(function(resolve, reject) {
-      let body = [];
-
-      // Send the HTTP request to the Graph API
-      request({
-        uri: `https://graph.facebook.com/v3.2/${senderPsid}`,
-        qs: {
-          access_token: config.pageAccesToken,
-          fields: "first_name, last_name, gender, locale, timezone"
-        },
-        method: "GET"
-      })
-        .on("response", function(response) {
-          // console.log(response.statusCode);
-
-          if (response.statusCode !== 200) {
-            reject(Error(response.statusCode));
-          }
-        })
-        .on("data", function(chunk) {
-          body.push(chunk);
-        })
-        .on("error", function(error) {
-          console.error("Unable to fetch profile:" + error);
-          reject(Error("Network Error"));
-        })
-        .on("end", () => {
-          body = Buffer.concat(body).toString();
-          // console.log(JSON.parse(body));
-
-          resolve(JSON.parse(body));
-        });
-    });
-  }*/
 
 //Deployed success in git
 // Imports dependencies and set up http server
@@ -72,7 +36,7 @@ app.post('/webhook', (req, res) => {
       // Get the sender PSID
       let sender_psid = webhook_event.sender.id;
 
-      // aaaCheck if the event is a message or postback and
+      // Check if the event is a message or postback and
       // pass the event to the appropriate handler function
       if (webhook_event.message) {
         handleMessage(sender_psid, webhook_event.message);        
@@ -135,7 +99,7 @@ function handleMessage(sender_psid, received_message) {
     let user=callUserProfileAPI(sender_psid);
 
     response = {
-          "text": `You "${user[first_name]}"  sent the message: "${received_message.text}". Now send me an attachment!`
+          "text": `You "toandang"  sent the message: "${received_message.text}". Now send me an attachment!`
     }
 
   } else if (received_message.attachments) {
@@ -218,40 +182,3 @@ function handlePostback(sender_psid, received_postback) {
 
  
 }
-
-
-function  callUserProfileAPI(senderPsid) {
-    return new Promise(function(resolve, reject) {
-      let body = [];
-
-      // Send the HTTP request to the Graph API
-      request({
-        uri: `https://graph.facebook.com/v3.2/${senderPsid}`,
-        qs: {
-          access_token: PAGE_ACCESS_TOKEN,
-          fields: "first_name, last_name, gender, locale, timezone"
-        },
-        method: "GET"
-      })
-        .on("response", function(response) {
-          // console.log(response.statusCode);
-
-          if (response.statusCode !== 200) {
-            reject(Error(response.statusCode));
-          }
-        })
-        .on("data", function(chunk) {
-          body.push(chunk);
-        })
-        .on("error", function(error) {
-          console.error("Unable to fetch profile:" + error);
-          reject(Error("Network Error"));
-        })
-        .on("end", () => {
-          body = Buffer.concat(body).toString();
-          // console.log(JSON.parse(body));
-
-          resolve(JSON.parse(body));
-        });
-    });
-  }
